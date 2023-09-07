@@ -1,7 +1,6 @@
 /*
  * Estudiante: Justin Lafay
  * Carrera: Electronica
- * Descripci�n:
  *
  */
 
@@ -14,9 +13,7 @@ int main(void){
 	uint32_t relojCpu = SystemCoreClock;
 	int numDisplay [10] ={0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};
 
-	//LPC_PINCON->PINSEL1 &= ~(3<<12);   // 0B00111111111111 & 0B10010101010101 = 0B00_010101010101
-	LPC_GPIO2->FIODIR0     |= (0b11111111<<0);     // 0B1000...000 | 0B010101..101 = 1_10101..101
-	//LPC_GPIO0->FIOMASK =0xFFFFFFFF;  //~FIOMASK & REGISTRO =0000
+	LPC_GPIO2->FIODIR0     |= (0b11111111<<0);
 
 	while(1){
 		for (int i=0; i<10; i++){
