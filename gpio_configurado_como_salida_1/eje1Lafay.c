@@ -14,7 +14,7 @@ int main(void){
 
 	LPC_GPIO0->FIODIR |= (0b1111111111<<0); // select 9 first pin as out (1)
 
-	int seq [1] = {0b1100100101, 0b001110001}; // table of 2 sequences of 10 LED
+	int seq [2] = {0b1100100101, 0b001110001}; // table of 2 sequences of 10 LED
 
 	while(1){
 		for (int i = 0; i<2; i++){
