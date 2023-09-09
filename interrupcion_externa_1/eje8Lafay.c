@@ -19,6 +19,8 @@ void confIntExt(void){
 	LPC_SC->EXTPOLAR    |= 0b100; //Interrumpe EINT2 cuando el flanco es de subida
 	NVIC_EnableIRQ(EINT1_IRQn);    // Habilita de interrupciones externas EINT1_IRQn.
 	NVIC_EnableIRQ(EINT2_IRQn);    // Habilita de interrupciones externas EINT2_IRQn.
+	NVIC_SetPriority(EINT1_IRQn, 0);
+	NVIC_SetPriority(EINT2_IRQn, 1);
 	return;
 }
 void EINT2_IRQHandler(void){
