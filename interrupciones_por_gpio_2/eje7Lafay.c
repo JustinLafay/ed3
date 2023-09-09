@@ -2,7 +2,6 @@
 
 void confGPIO(void); // Prototipo de la funci�n de conf. de puertos
 void confIntGPIO(void); //Prototipo de la funci�n de conf. de interrupciones por GPIO
-void retardo(uint32_t tiempo);
 
 uint16_t auxiliar = 0b0;
 
@@ -15,10 +14,7 @@ int main(void) {
 	}
 	return 0;
 }
-void retardo (uint32_t tiempo){
-	for(uint32_t conta = 0; conta<tiempo;conta++){}
-	return;
-}
+
 void confGPIO(void){
 	LPC_GPIO0->FIODIR0 |= (0b11<<0);
 	LPC_GPIO2->FIODIR0 &=~ (0b11<<0);
