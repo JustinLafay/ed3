@@ -28,7 +28,7 @@ void confIntGPIO(void){
 
 void confTimer(void){
 	LPC_SC->PCONP       |= (1<<2);  // pag. 65 Power Control for Peripherals register (TIMER 1)
-	LPC_SC->PCLKSEL0    |= (1<<4);  // pag. 59  Peripheral Clock Selection register GPIO
+	LPC_SC->PCLKSEL0    |= (1<<4);  // pag. 59  Peripheral Clock Selection register TIMER1
 	LPC_PINCON->PINSEL3 |= (3<<11); // pag. 120 When 11 => MAT1.0
 	LPC_TIM0->EMR       |=(3<<4);   // pag. 509 External Match Register EMC0 toggle
 	LPC_TIM0->MR0        = 70000000;// match time
