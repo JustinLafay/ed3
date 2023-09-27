@@ -27,21 +27,20 @@ void confIntGPIO(void){
 
 
 void confTimer(void){
-	LPC_SC->PCONP       |= (1<<1);  // pag. 65
-	LPC_SC->PCLKSEL0    |= (1<<2);  // pag. 59
-	LPC_PINCON->PINSEL3 |= (3<<24); // pag. 120
-	LPC_TIM0->EMR       |=(3<<4);   // pag. 509
-	LPC_TIM0->MR0        = 70000000;//
-	LPC_TIM0->MCR       |= (1<<1);       // pag. 507
-	LPC_TIM0->MCR       &= (1<<0);       // pag. 507
-	LPC_TIM0->TCR        = 3;       // pag. 505
-	LPC_TIM0->TCR       &= ~(1<<1);
-	// NVIC_EnableIRQ(TIMER0_IRQn);
+	LPC_SC->PCONP       |= (1<<2);  // pag. 65 Power Control for Peripherals register (TIMER 1)
+	LPC_SC->PCLKSEL0    |= (1<<4);  // pag. 59  Peripheral Clock Selection register GPIO
+	LPC_PINCON->PINSEL3 |= (3<<11); // pag. 120 When 11 => MAT1.0
+	LPC_TIM0->EMR       |=(3<<4);   // pag. 509 External Match Register EMC0 toggle
+	LPC_TIM0->MR0        = 70000000;// match time
+	LPC_TIM0->MCR       |= (1<<3);  // pag. 507 the TC will be reset if MR1 matches it
+	LPC_TIM0->MCR       &= (1<<2);  // pag. 507 This interrupt is enabled (MR1)
+	LPC_TIM0->TCR        = 3;       // pag. 505 Reset timer AND enable timer
+	LPC_TIM0->TCR       &= ~(1<<1); // remove reset timer
 	return;
 }
 
 void EINT3_IRQHandler(void){
-
+	LPC_TIM0->MR0 >>= 1;
 }
 
 void TIMER0_IRQHandler(void) //ISR del timer0
