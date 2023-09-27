@@ -43,7 +43,7 @@ void EINT3_IRQHandler(void){
 	LPC_TIM0->MR0 >>= 1;
 }
 
-void TIMER0_IRQHandler(void) //ISR del timer0
+void TIMER1_IRQHandler(void) //ISR del timer0
 {
 static uint8_t i = 0;
 	if (i==0){

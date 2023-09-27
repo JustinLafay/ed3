@@ -1,0 +1,1 @@
+Escribir el código que configure el timer0 para cumplir con las especificaciones dadas en la figura adjunta. (Pag 510 Figura 115 del manual de usuario del LPC 1769). Considerar una frecuencia de cclk de 100 Mhz y una división de reloj de periférico de 2.
