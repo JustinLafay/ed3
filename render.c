@@ -1,3 +1,4 @@
+//Justin Lafay
 #include "LPC17xx.h"
 
 void confGPIO(void);
@@ -19,36 +20,42 @@ void confGPIO(void){
 }
 
 void confIntExt(void){
-	LPC_PINCON->PINSEL4 |= (0b01<<24); //25:24 P2.12 (EINT2) OR
-	LPC_PINCON->PINSEL4 &=~ (0b10<<24); //25:24 P2.12 (EINT2) AND
+	LPC_PINCON->PINSEL4 |= (0b01<<22); //23:22 P2.11 (EINT1) OR
+	LPC_PINCON->PINSEL4 &=~ (0b10<<22); //23:22 P2.11 (EINT1) AND
 	LPC_SC->EXTINT |= 0xF; //limpiar bandera de interupcion
-	LPC_SC->EXTMODE |= (1<<2); //edge-sensitive mode
-	LPC_SC->EXTPOLAR &=~ (1<<2); //falling-edge sensitive
-	NVIC_EnableIRQ(EINT2_IRQn); //activar la interupcion externa
+	LPC_SC->EXTMODE |= (1<<1); //edge-sensitive mode
+	LPC_SC->EXTPOLAR &=~ (1<<1); //falling-edge sensitive
+	NVIC_EnableIRQ(EINT1_IRQn); //activar la interupcion externa
 	return;
 
 }
 
 void confTimer(void){
-	LPC_SC->PCONP |= (1<<1); //activar el power en timer 0 p.65
-	LPC_SC->PCLKSEL0 |= (0b01<<2); //CCLK = PCLK
-	LPC_SC->PCLKSEL0 &=~ (0b10<<2); //CCLK = PCLK
-	LPC_PINCON->PINSEL3 |= (3<<24); //P1.18 = MAT0.0
-	LPC_TIM0->EMR |= (3<<4); //Toggle the corresponding External Match bit/output.
-	LPC_TIM0->MR0 = 70000000; //Match value
-	LPC_TIM0->MCR |= 3; // Interrupt, Reset on MR0, Stop on MR0 -> TCR = 0
-	LPC_TIM0->TCR = 3; // Reset timer AND enable timer
-	LPC_TIM0->TCR&=~ (1<<1);// remove reset timer
+	LPC_SC->PCONP |= (1<<22); //activar el power en timer 2 p.65
+	LPC_SC->PCLKSEL1 |= (0b01<<12); //CCLK = PCLK TIMER 2
+	LPC_SC->PCLKSEL1 &=~ (0b10<<12); //CCLK = PCLK TIMER 2
+	LPC_PINCON->PINSEL0 |= (3<<12); //P0.6 = MAT2.0
+	LPC_TIM2->EMR |= (3<<4); //Toggle the corresponding External Match bit/output.
+	LPC_TIM2->MR0 = 70000000; //Match value
+	LPC_TIM2->MCR |= 3; // Interrupt, Reset on MR0, Stop on MR0 -> TCR = 0
+	LPC_TIM2->TCR = 3; // Reset timer AND enable timer
+	LPC_TIM2->TCR&=~ (1<<1);// remove reset timer
 	return;
 
 }
 
-void EINT2_IRQHandler(void){
-	LPC_TIM0->MR0 >>= 1;
+void EINT1_IRQHandler(void){
+	static uint8_t j = 0;
+	LPC_SC->PCLKSEL1 &= (j<<12); //PCLK TIMER 2 AND
+	if (j = 3) {
+		j = 0;
+	} else {
+		j++;
+	}
 
 }
 
-void TIMER0_IRQHandler(void){
+void TIMER2_IRQHandler(void){
 	static uint8_t i = 1;
 	if (i==1){
 		i=0;

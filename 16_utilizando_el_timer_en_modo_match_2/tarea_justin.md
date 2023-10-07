@@ -1,7 +1,6 @@
 Escribir un programa para que por cada presión de un pulsador, la frecuencia de parpadeo de un led disminuya a la mitad debido a la modificación del pre-escaler del Timer 2. El pulsador debe producir una interrupción por EINT1 con flanco descendente. Adjuntar el código en C.
 
 ```C
-//Justin Lafay
 #include "LPC17xx.h"
 
 void confGPIO(void);
@@ -48,13 +47,7 @@ void confTimer(void){
 }
 
 void EINT1_IRQHandler(void){
-	static uint8_t j = 0;
-	LPC_SC->PCLKSEL1 &= (j<<12); //PCLK TIMER 2 AND
-	if (j = 3) {
-		j = 0;
-	} else {
-		j++;
-	}
+	LPC_TIM2->PR += 1;
 
 }
 
