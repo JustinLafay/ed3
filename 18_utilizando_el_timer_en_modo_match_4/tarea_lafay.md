@@ -1,3 +1,16 @@
+Utilizando los 4 registros match del Timer 0 y las salidas P0.0, P0.1, P0.2 y P0.3, realizar un programa en C que permita obtener las formas de ondas adjuntas, donde los pulsos en alto tienen una duración de 5 mseg. Un pulsador conectado a la entrada EINT3, permitirá elegir entre las dos secuencias mediante una rutina de servicio a la interrupción. La prioridad de la interrupción del Timer tiene que ser mayor que la del pulsador. Estas formas de ondas son muy útiles para controlar un motor paso a paso. Adjuntar el código en C .
+
+<span style="font-size: 24px;">Secuencia 1</span>
+
+![Secuencia 1](secuencia1.png)
+
+<span style="font-size: 24px;">Secuencia 2</span>
+
+![Secuencia 2](secuencia2.png)
+
+
+```C
+//Justin Lafay
 #include "LPC17xx.h"
 
 void confGPIO(void);
@@ -14,7 +27,7 @@ int main(void){
 }
 
 void confGPIO(void){
-	LPC_GPIO0->FIODIR |= 1; //P0.0 como salida
+	LPC_GPIO0->FIODIR |= 0b1111; //P0.0,1,2,3,4 como salida
 
 }
 
@@ -49,14 +62,13 @@ void EINT1_IRQHandler(void){
 }
 
 void TIMER2_IRQHandler(void){
-	static uint8_t i = 1;
-	if (i==1){
-		i=0;
-		LPC_GPIO0->FIOSET |= 1;
-	} else {
-		i=1;
-		LPC_GPIO0->FIOCLR |= 1;
+	for (uint8_t i=0; i++; i<4){
+		if ((LPC_TIM2->EMR >> i) & 1){
+			LPC_GPIO0->FIOSET |= (LPC_GPIO0->FIOPIN & (1<<i));
+			LPC_GPIO0->FIOCLR |=~ (LPC_GPIO0->FIOPIN & (1<<i));
+		}
 	}
-	LPC_TIM0->IR |= 1;
 
 }
+
+```
