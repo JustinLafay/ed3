@@ -2,7 +2,7 @@ Utilizando los 4 registros match del Timer 0 y las salidas P0.0, P0.1, P0.2 y P0
 
 <span style="font-size: 24px;">Secuencia 1</span>
 
-![Secuencia 1](secuencia1.png)
+![Secuencia 1](secuencia1.PNG)
 
 <span style="font-size: 24px;">Secuencia 2</span>
 
