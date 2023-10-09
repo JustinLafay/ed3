@@ -32,40 +32,52 @@ void confGPIO(void){
 }
 
 void confIntExt(void){
-	LPC_PINCON->PINSEL4 |= (0b01<<22); //23:22 P2.11 (EINT1) OR
-	LPC_PINCON->PINSEL4 &=~ (0b10<<22); //23:22 P2.11 (EINT1) AND
+	LPC_PINCON->PINSEL4 |= (0b01<<26); //27:26 P2.13(EINT3) OR
+	LPC_PINCON->PINSEL4 &=~ (0b10<<26); //27:26 P2.13 (EINT3) AND
 	LPC_SC->EXTINT |= 0xF; //limpiar bandera de interupcion
-	LPC_SC->EXTMODE |= (1<<1); //edge-sensitive mode
-	LPC_SC->EXTPOLAR &=~ (1<<1); //falling-edge sensitive
-	NVIC_EnableIRQ(EINT1_IRQn); //activar la interupcion externa
+	LPC_SC->EXTMODE |= (1<<3); //edge-sensitive mode
+	LPC_SC->EXTPOLAR &=~ (1<<3); //falling-edge sensitive
+	NVIC_EnableIRQ(EINT3_IRQn); //activar la interupcion externa
 	return;
 
 }
 
 void confTimer(void){
-	LPC_SC->PCONP |= (1<<22); //activar el power en timer 2 p.65
-	LPC_SC->PCLKSEL1 |= (0b01<<12); //CCLK = PCLK TIMER 2
-	LPC_SC->PCLKSEL1 &=~ (0b10<<12); //CCLK = PCLK TIMER 2
-	LPC_PINCON->PINSEL0 |= (3<<12); //P0.6 = MAT2.0
-	LPC_TIM2->EMR |= (3<<4); //Toggle the corresponding External Match bit/output.
-	LPC_TIM2->MR0 = 70000000; //Match value
-	LPC_TIM2->MCR |= 3; // Interrupt, Reset on MR0, Stop on MR0 -> TCR = 0
-	LPC_TIM2->TCR = 3; // Reset timer AND enable timer
-	LPC_TIM2->TCR&=~ (1<<1);// remove reset timer
+	LPC_SC->PCONP |= (1<<1); //activar el power en timer 0 p.65
+	LPC_SC->PCLKSEL1 |= (0b01<<2); //CCLK = PCLK TIMER 0
+	LPC_SC->PCLKSEL1 &=~ (0b10<<2); //CCLK = PCLK TIMER 0
+	LPC_TIM0->EMR &= 0; //Do nothing.
+	LPC_TIM0->MR0 = 499999999; //Match value
+	LPC_TIM0->MR1 = 999999999; //Match value
+	LPC_TIM0->MR2 = 1499999997; //Match value
+	LPC_TIM0->MR3 = 1999999999; //Match value
+	LPC_TIM0->MCR |= (0b011001001001); // Interrupt on MR0,1,2,3, reset on 3.
+	LPC_TIM0->TCR = 3; // Reset timer AND enable timer
+	LPC_TIM0->TCR&=~ (1<<1);// remove reset timer
 	return;
 
 }
 
-void EINT1_IRQHandler(void){
+void EINT3_IRQHandler(void){
 	LPC_TIM2->PR += 1;
 
 }
 
-void TIMER2_IRQHandler(void){
-	for (uint8_t i=0; i++; i<4){
-		if ((LPC_TIM2->EMR >> i) & 1){
-			LPC_GPIO0->FIOSET |= (LPC_GPIO0->FIOPIN & (1<<i));
-			LPC_GPIO0->FIOCLR |=~ (LPC_GPIO0->FIOPIN & (1<<i));
+void TIMER0_IRQHandler(void){
+	static uint8_t seqflag = 1;
+	static uint8_t seq[3] = {0b1001, 0b0011, 0b0110};
+	if (seqflag == 1){
+		if(LPC_GPIO0->FIOPIN & (1<<3) == 1){
+			LPC_GPIO0->FIOCLR |= (0b1110);
+			LPC_GPIO0->FIOSET |= 1;
+
+		} else {
+			LPC_GPIO0->FIOSET |= (LPC_GPIO0->FIOSET << 1);
+		}
+		seqflag = 0;
+	} else {
+		for (static uint8_t i = 0; i<4; i++){
+
 		}
 	}
 
