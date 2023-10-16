@@ -167,3 +167,69 @@ void ADC_IRQHandler(void)
 ```
 
  b.- Modificar el código realizado en el punto "a" utilizando ahora el Driver provisto para este microcontrolador. 
+
+```C
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_pinsel.h"
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_adc.h"
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_timer.h"
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_libcfg_default.h"
+
+#define _ADC_INT		ADC_ADINTEN0
+#define _ADC_CHANNEL	ADC_CHANNEL_0
+
+__IO uint16_t adc_value = 0;
+
+void confGPIO(void);
+void confADC(void);
+void confTimer(void);
+
+int main(void){
+	confGPIO();
+	confADC();
+	confTimer();
+}
+
+void confGPIO(void){
+	LPC_GPIO0->FIODIR |= 0xFFF;
+	return;
+}
+
+void confADC(void){
+	ADC_Init(LPC_ADC, 200000);
+	ADC_IntConfig(LPC_ADC, _ADC_INT, ENABLE);
+	ADC_ChannelCmd(LPC_ADC, _ADC_CHANNEL, ENABLE);
+	ADC_StartCmd(LPC_ADC, ADC_START_ON_MAT01);
+}
+
+void confTimer(void){
+	TIM_TIMERCFG_Type	tmrConf;
+	TIM_MATCHCFG_Type	matchConf;
+
+	tmrConf.PrescaleOption	=	TIM_PRESCALE_USVAL;
+	tmrConf.PrescaleValue	=	4999;
+
+	matchConf.MatchChannel			=	1;
+	matchConf.IntOnMatch			=	ENABLE;
+	matchConf.ResetOnMatch			=	ENABLE;
+	matchConf.StopOnMatch			=	DISABLE;
+	matchConf.ExtMatchOutputType	=	TIM_EXTMATCH_NOTHING;
+	matchConf.MatchValue			=	4999;
+
+	TIM_Init(LPC_TIM0, TIM_TIMER_MODE, &tmrConf);
+	TIM_ConfigMatch(LPC_TIM0, &matchConf);
+	TIM_Cmd(LPC_TIM0, ENABLE);
+
+	NVIC_EnableIRQ(TIMER0_IRQn);
+}
+
+void ADC_IRQHandler(void){
+	adc_value = 0;
+	if(ADC_ChannelGetStatus(LPC_ADC, _ADC_CHANNEL, ADC_DATA_DONE)){
+		adc_value = ADC_ChannelGetData(LPC_ADC, _ADC_CHANNEL);
+		adc_value = (adc_value>>4) & 0xFFF;
+	}
+	LPC_GPIO0->FIOSET |= adc_value;
+	LPC_GPIO0->FIOCLR |=~ adc_value;
+}
+
+```
