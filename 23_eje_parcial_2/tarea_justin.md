@@ -85,3 +85,114 @@ void ADC_IRQHandler(void){
 
 Utilizando el timer0, un dac, interrupciones y el driver del LPC1769 , escribir un código que permita generar una señal triangular periódica simétrica, que tenga el mínimo periodo posible, la máxima excursión de voltaje pico a pico posible y el mínimo incremento de señal posible por el dac. Suponer una frecuencia de core cclk de 100 Mhz. El código debe estar debidamente comentado.
 
+```C
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_pinsel.h"
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_adc.h"
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_dac.h"
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_timer.h"
+#include "../../CMSISv2p00_LPC17xx/Drivers/inc/lpc17xx_libcfg_default.h"
+
+void confTimer(void);
+void confDAC(void);
+void confDMA(void);
+void confPin(void);
+
+uint16_t valores[2048];
+
+int main(void) {
+	confTimer();
+	confDAC();
+	confPin();
+	confDMA();
+
+	for (uint16_t i = 0; i < 2048; i++) {
+		if (i < 1025) {
+			valores[i] = i;
+		} else if (i >= 1025) {
+			valores[i] = 2048 - (i-1025);
+		}
+	}
+
+	while (1) {
+		GPDMA_ChannelCmd(0, ENABLE);
+	}
+	return 0;
+}
+
+void confTimer() {
+	TIM_TIMERCFG_Type struct_config;
+	TIM_MATCHCFG_Type struct_match;
+
+	struct_config.PrescaleOption = TIM_PRESCALE_TICKVAL;
+	struct_config.PrescaleValue = 0xFFFFFFFF;
+
+	struct_match.MatchChannel = 0;
+	struct_match.IntOnMatch = ENABLE;
+	struct_match.ResetOnMatch = ENABLE;
+	struct_match.StopOnMatch = DISABLE;
+	struct_match.ExtMatchOutputType = TIM_EXTMATCH_NOTHING;
+	struct_match.MatchValue = 0xFFFFFFFF;
+
+	TIM_Init(LPC_TIM0, TIM_TIMER_MODE, &struct_config);
+	TIM_ConfigMatch(LPC_TIM0, &struct_match);
+	TIM_Cmd(LPC_TIM0, ENABLE);
+
+	NVIC_EnableIRQ(TIMER0_IRQn);
+
+	return;
+}
+
+void confDAC() {
+	DAC_Init(LPC_DAC);
+}
+
+void confPin(void) {
+	PINSEL_CFG_Type pinsel_cfg;
+	pinsel_cfg.Portnum = 0;
+	pinsel_cfg.Pinnum = 26;
+	pinsel_cfg.Funcnum = 2;
+	pinsel_cfg.Pinmode = 0;
+	pinsel_cfg.OpenDrain = 0;
+	PINSEL_ConfigPin(&pinsel_cfg);
+	return;
+}
+
+void confDMA(void){
+	GPDMA_LLI_Type LLI1;
+	LLI1.SrcAddr = &valores;
+	LLI1.DstAddr = LPC_DAC->DACR;
+	LLI1.NextLLI = &LLI1;
+	LLI1.Control = 2048 | (1<<18) | (1<<21) | (1<<26);
+	GPDMA_Init();
+
+	GPDMA_Channel_CFG_Type channel_DMA;
+	channel_DMA.ChannelNum = 0;
+	channel_DMA.SrcMemAddr = &valores;
+	channel_DMA.DstMemAddr = 0;
+	channel_DMA.TransferSize = 2048;
+	channel_DMA.TransferWidth = 0;
+	channel_DMA.TransferType = GPDMA_TRANSFERTYPE_M2P;
+	channel_DMA.SrcConn = 0;
+	channel_DMA.DstConn = GPDMA_CONN_DAC;
+	channel_DMA.DMALLI = (uint16_t)&LLI1;
+	GPDMA_Setup(&channel_DMA);
+
+}
+
+void TIMER0_IRQHandler(void) {
+	static uint16_t dac_val;
+	static uint8_t flag;
+	if ((dac_val >= 0x3FF) | (dac_val <= 0)) {
+		flag ^= flag;
+	}
+	if (flag == 0) {
+		dac_val++;
+	} else if (flag == 1) {
+		dac_val--;
+	}
+	DAC_UpdateValue(LPC_DAC, dac_val);
+	TIM_ClearIntPending(LPC_TIM0, TIM_MR0_INT);
+
+}
+
+```
