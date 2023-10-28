@@ -222,13 +222,35 @@ void EINT3_IRQHandler(void)
 
 #### Interrupt set registers (falling edge) :
 
-<img src="img_readme/gpio_int_falling_edge.png">
+<img src="img_readme/gpio_int_falling_edge.png" width=700px>
 Same bit numbers for falling edge than rising edge.
 
 #### Interrupt clear registers :
 
-<img src="img_readme/gpio_int_clear.png">
+<img src="img_readme/gpio_int_clear.png" width=700px>
 Same bit numbers for clear than rising edge.
+
+## Power & Clock selection
+
+<details>
+<summary>Power register (PCONP)</summary>
+<br>
+<img src="img_readme/pconp.png" width=700px>
+</details>
+<details>
+<summary>Clock register PCLKSEL0</summary>
+<br>
+<img src="img_readme/pclksel0.png" width=700px>
+</details>
+<details>
+<summary>Clock register PCLKSEL1</summary>
+<br>
+<img src="img_readme/pclksel1.png" width=700px>
+</details>
+
+Clock selection in PCLKSEL0 and PCLKSEL1 :
+
+<img src="img_readme/pclkconf.png" width=700px>
 
 ## Timer
 
