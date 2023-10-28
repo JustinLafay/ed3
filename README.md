@@ -219,7 +219,7 @@ Same bit numbers for clear than rising edge.
 
 ## Timer
 
-Exemple setup of timer (modo match) :
+Exemple setup of timer (mode match) :
 
 ```C
 void confTimer(void){
@@ -252,3 +252,96 @@ LPC_TIM0->IR|=1; //Limpia bandera de interrupci�n
 return;
 }
 ```
+Other exemple setup of timer (mode capture) :
+```C
+void confTimer(void){
+
+	LPC_SC->PCONP       |= (1<<1); //Por defecto timer 0 y 1 estan siempre prendidos
+	LPC_SC->PCLKSEL0    |= (1<<2); // configuraci�n del clock de perif�rico
+	LPC_PINCON->PINSEL3 |= (3<<20);        //pag. 120
+	LPC_TIM0->CCR       |= (1<<1)|(1<<2);  //pag. 508
+	LPC_TIM0->TCR        = 3;              //pag. 505
+	LPC_TIM0->TCR       &= ~(1<<1);
+	NVIC_EnableIRQ(TIMER0_IRQn);
+	return;
+}
+
+void TIMER0_IRQHandler(void) //ISR del timer0
+{
+	static uint8_t i = 0;
+	aux = LPC_TIM0->CR0; //Variable auxiliar para observar el valor del registro de captura
+
+	if (i==0){
+		LPC_GPIO0->FIOSET = (1<<22);
+		i = 1;
+	}
+	else if (i==1){
+		LPC_GPIO0->FIOCLR = (1<<22);
+		i = 0;
+	}
+	LPC_TIM0->IR|=1; //Limpia bandera de interrupci�n
+	return;
+}
+```
+
+### Registers
+
+<div>
+    <details>
+    <summary>Interrupt register (IR)</summary>
+    <br>
+    <img src="img_readme/timer_ir.png" width=700px>
+    </details>
+    <details>
+    <summary>Timer control register (TCR)</summary>
+    <br>
+    <img src="img_readme/timer_cr.png" width=700px>
+    </details>
+    <details>
+    <summary>Count control register (CTCR)</summary>
+    <br>
+    <img src="img_readme/timer_ctcr.png" width=700px>
+    </details>
+    <details>
+    <summary>Timer counter register</summary>
+    <br>
+    <img src="img_readme/timer_tcr.png" width=700px>
+    </details>
+    <details>
+    <summary>Prescale register (PR)</summary>
+    <br>
+    <img src="img_readme/timer_pr.png" width=700px>
+    </details>
+    <details>
+    <summary>Prescale timer register (PCR)</summary>
+    <br>
+    <img src="img_readme/timer_pcr.png" width=700px>
+    </details>
+    <details>
+    <summary>Match register (MR)</summary>
+    <br>
+    <img src="img_readme/timer_mr.png" width=700px>
+    </details>
+    <details>
+    <summary>Match control register (MCR)</summary>
+    <br>
+    <img src="img_readme/timer_mcr.png" width=700px>
+    </details>
+    <details>
+    <summary>Capture registers (CR)</summary>
+    <br>
+    <img src="img_readme/timer_cap_r.png" width=700px>
+    </details>
+    <details>
+    <summary>Capture control registers (CCR)</summary>
+    <br>
+    <img src="img_readme/timer_cap_contrl.png" width=700px>
+    </details>
+    <details>
+    <summary>External match register (EMR)</summary>
+    <br>
+    <img src="img_readme/timer_emr.png" width=700px>
+    </details>
+</div>
+
+## ADC
