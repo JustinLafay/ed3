@@ -260,6 +260,12 @@ Clock selection in PCLKSEL0 and PCLKSEL1 :
 
 (*[Table of contents](#table-of-contents)*)
 
+Calcul exemple of timer match value :
+
+$$
+T = \frac{1}{CCLK} \cdot (PR + 1) \cdot (TMR + 1) ≡ TMR = (T \cdot CCLK) - 1 ≡ TMR = (\frac{100 \cdot 10^6}{20000}) - 1 ≡ TMR = 4999
+$$
+
 Exemple setup of timer (mode match) :
 
 ```C
