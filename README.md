@@ -3,10 +3,12 @@
 ## Table of Contents
 
 - [C Basics](#c-basics)
-- [PIN SELECTION](#pin-selection)
+- [Pin Selection](#pin-selection)
 - [GPIO](#gpio)
+- [Power & Clock](#power--clock-selection)
 - [Timer](#timer)
 - [ADC](#adc)
+- [DAC](#dac)
 
 ## C Basics
 (*[Table of contents](#table-of-contents)*)
@@ -23,7 +25,7 @@ Put 0 at "x" position in register "r" :
 r &= ~(1<<x);
 ```
 
-## PIN SELECTION
+## Pin Selection
 
 (*[Table of contents](#table-of-contents)*)
 
