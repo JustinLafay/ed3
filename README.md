@@ -234,6 +234,8 @@ Same bit numbers for clear than rising edge.
 
 ## Power & Clock selection
 
+(*[Table of contents](#table-of-contents)*)
+
 <details>
 <summary>Power register (PCONP)</summary>
 <br>
@@ -501,6 +503,8 @@ void ADC_IRQHandler(void)
 </div>
 
 ## DAC
+
+(*[Table of contents](#table-of-contents)*)
 
 Exemple of setup of DAC (con driver) :
 
