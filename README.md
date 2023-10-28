@@ -428,8 +428,33 @@ void ADC_IRQHandler(void)
 
 <div>
     <details>
-    <summary>External match register (EMR)</summary>
+    <summary>ADC control register (ADCR)</summary>
     <br>
-    <img src="img_readme/timer_emr.png" width=700px>
+    <img src="img_readme/adc_adcr.png" width=700px>
+    </details>
+    <details>
+    <summary>ADC global data register (ADGDR)</summary>
+    <br>
+    <img src="img_readme/adc_adgdr.png" width=700px>
+    </details>
+    <details>
+    <summary>ADC interrupt enable register (ADINTEN)</summary>
+    <br>
+    <img src="img_readme/adc_inten.png" width=700px>
+    </details>
+    <details>
+    <summary>ADC data registers (ADDR)</summary>
+    <br>
+    <img src="img_readme/adc_addr.png" width=700px>
+    </details>
+    <details>
+    <summary>ADC status register (ADSTAT)</summary>
+    <br>
+    <img src="img_readme/adc_adstat.png" width=700px>
+    </details>
+    <details>
+    <summary>ADC trim register (ADTRIM)</summary>
+    <br>
+    <img src="img_readme/adc_adtrim.png" width=700px>
     </details>
 </div>
