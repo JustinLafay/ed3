@@ -1,6 +1,15 @@
 # ED3 - 2023
 
+## Table of Contents
+
+- [C Basics](#c-basics)
+- [PIN SELECTION](#pin-selection)
+- [GPIO](#gpio)
+- [Timer](#timer)
+- [ADC](#adc)
+
 ## C Basics
+(*[Table of contents](#table-of-contents)*)
 
 Put 1 at "x" position in register "r" :
 
@@ -15,6 +24,8 @@ r &= ~(1<<x);
 ```
 
 ## PIN SELECTION
+
+(*[Table of contents](#table-of-contents)*)
 
 ### PINSEL
 
@@ -82,6 +93,8 @@ LPC_PINCON->PINMODE0 &= ~(0b01<<14);	//NEITHER PULL UP/DOWN AND
 ```
 
 ## GPIO
+
+(*[Table of contents](#table-of-contents)*)
 
 ### Digital I/O ports
 
@@ -219,6 +232,8 @@ Same bit numbers for clear than rising edge.
 
 ## Timer
 
+(*[Table of contents](#table-of-contents)*)
+
 Exemple setup of timer (mode match) :
 
 ```C
@@ -345,6 +360,8 @@ void TIMER0_IRQHandler(void) //ISR del timer0
 </div>
 
 ## ADC
+
+(*[Table of contents](#table-of-contents)*)
 
 Exemple of setup of ADC (burst) :
 
