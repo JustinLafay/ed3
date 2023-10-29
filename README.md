@@ -9,6 +9,7 @@
 - [Timer](#timer)
 - [ADC](#adc)
 - [DAC](#dac)
+- [DMA](#dma)
 
 ## C Basics
 (*[Table of contents](#table-of-contents)*)
@@ -679,6 +680,8 @@ void confDac(void){
 </details>
 
 ## DMA
+
+(*[Table of contents](#table-of-contents)*)
 
 The DMA controller allows peripheral-to memory, memory-to-peripheral, and
 memory-to-memory transactions. Each DMA stream provides unidirectional serial DMA transfers for a single source and destination. For example, a bi-directional port requires one stream for transmit and one for receives. The source and destination areas can each be either a memory region or a peripheral.
