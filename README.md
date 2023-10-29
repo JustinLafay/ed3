@@ -676,8 +676,17 @@ void confDac(void){
 	return;
 }
 ```
-
 </details>
+
+### Calculo DAC
+$
+V_{\text{OUT}} = \text{VAL} \cdot \frac{{(V_{\text{REFP}} - V_{\text{REFN}})}}{1024 + V_{\text{REFN}}}
+$
+
+With $V_{\text{REFN}} = 0$ --> $V_{\text{OUT}} = \text{VAL} \cdot \frac{{(V_{\text{REFP}})}}{1024}$
+
+- $\text{VAL}$ is the 10 bits entry value.
+- $V_{\text{REF(Positive/Negative)}}$ is the reference voltage input.
 
 ## DMA
 
