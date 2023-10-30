@@ -396,6 +396,11 @@ void TIMER0_IRQHandler(void) //ISR del timer0
 
 (*[Table of contents](#table-of-contents)*)
 
+- Analog to digital convertor of 12 bits
+- Multiplex in 8 pin
+- Input range typically 3V, never more than VDDA
+- Max speed 200kHz
+
 Exemple of setup of ADC (burst) :
 
 ```C
@@ -474,13 +479,14 @@ void ADC_IRQHandler(void)
 }
 ```
 
-### Registers
+### ADC Registers
 
 <div>
     <details>
     <summary>ADC control register (ADCR)</summary>
     <br>
     <img src="img_readme/adc_adcr.png" width=700px>
+	<img src="img_readme/adcr_img.png" width=700px>
     </details>
     <details>
     <summary>ADC global data register (ADGDR)</summary>
@@ -789,7 +795,7 @@ void confDMA(void){
     GPDMACfg.DMALLI = (uint32_t)&DMA_LLI_Struct; // Setup channel with given parameter
     GPDMA_Setup(&GPDMACfg);
     return;
-}
+}https://www.usinenouvelle.com/article/dossier-comment-la-5g-veut-transformer-les-usines.N1814337
 void confDac(void){
     uint32_t tmp;
     DAC_CONVERTER_CFG_Type DAC_ConverterConfigStruct;
