@@ -237,11 +237,16 @@ Same bit numbers for clear than rising edge.
 
 (*[Table of contents](#table-of-contents)*)
 
+### PCONP
+
 <details>
 <summary>Power register (PCONP)</summary>
 <br>
 <img src="img_readme/pconp.png" width=700px>
 </details>
+
+### PCLKSEL
+
 <details>
 <summary>Clock register PCLKSEL0</summary>
 <br>
