@@ -266,6 +266,12 @@ Clock selection in PCLKSEL0 and PCLKSEL1 :
 
 (*[Table of contents](#table-of-contents)*)
 
+The Timer/Counter is designed to count cycles of the peripheral clock (PCLK) or an
+externally-supplied clock, and can optionally generate interrupts or perform other actions
+at specified timer values, based on four match registers. It also includes four capture
+inputs to trap the timer value when an input signal transitions, optionally generating an
+interrupt.
+
 Calcul exemple of timer match value :
 
 $$
